@@ -6,7 +6,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Paths;
-//import net.sf.json.xml.XMLSerializer;
+import net.sf.json.xml.XMLSerializer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
@@ -14,7 +14,6 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.xml.sax.SAXException;
 import com.alibaba.fastjson.JSON;
@@ -30,9 +29,6 @@ import com.alibaba.fastjson.JSONObject;
 public class JsonXmlUtils {
 
     private static final String ENCODING = "UTF-8";
-
-//    private static XMLSerializer xmlserializer = new XMLSerializer();
-
     /**
      * JSON对象转漂亮的xml字符串
      *
@@ -121,19 +117,26 @@ public class JsonXmlUtils {
      * @return JSON对象
      * @throws DocumentException
      */
-   public static JSONObject xmlToJson(String xml) throws DocumentException {
-        JSONObject json = new JSONObject();
-        SAXReader reader = new SAXReader();
-        Document document = reader.read(new StringReader(xml));
-        Element root = document.getRootElement();
-        json.put(root.getName(), elementToJson(root));
-        return json;
-    }
-
-//    public static String xmlToJson(String xml) throws Exception {
-//        String rs = xmlserializer.read(xml).toString();
-//        return rs;
+//   public static JSONObject xmlToJson(String xml) throws DocumentException {
+//        JSONObject json = new JSONObject();
+//        SAXReader reader = new SAXReader();
+//        Document document = reader.read(new StringReader(xml));
+//        Element root = document.getRootElement();
+//        json.put(root.getName(), elementToJson(root));
+//        return json;
 //    }
+
+    /**
+     * XML字符串转JSON对象
+     *
+     * @param xml xml字符串
+     * @return JSON对象
+     * @throws DocumentException
+     */
+    public static String xmlToJson(String xml){
+        XMLSerializer xmlSerializer = new XMLSerializer();
+        return xmlSerializer.read(xml).toString(); // .replace("@","").replace("#","");
+    }
 
     /**
      * Element对象转JSON对象

@@ -1,5 +1,6 @@
 package com.isstech.vpass.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.Gson;
 import com.isstech.vpass.code.ErrorCode;
@@ -58,13 +59,14 @@ public class SmartSearchController extends BaseController {
         requestXML = requestXML.replace("{size}", size);
         String url = PATH + CommonContext.VIDEOANALYSIS_PEOPLEFACES_V1_5;
         String result = ContextMethod.sendPost(url, requestXML);
-        String gsonString = new Gson().toJson(result);
+        String jsonString = JsonXmlUtils.xmlToJson(result);
         if(type.equals("xml")) {
             return Resp.success(result);
         } else if (type.equals("json")) {
-            return Resp.success(JsonXmlUtils.xmlToJson(result));
-        } else if(type.equals("gsonString")) {
-            return Resp.success(gsonString);
+            System.out.println(JSON.toJSON(jsonString));
+            return Resp.success(JSON.toJSON(jsonString));
+        } else if(type.equals("jsonString")) {
+            return Resp.success(jsonString);
         }
         return Resp.fail(ErrorCode.SYSTEM_ERROR_416);
     }
