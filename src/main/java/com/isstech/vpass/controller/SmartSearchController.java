@@ -1,30 +1,18 @@
 package com.isstech.vpass.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.google.gson.Gson;
 import com.isstech.vpass.code.ErrorCode;
 import com.isstech.vpass.code.Resp;
 import com.isstech.vpass.tools.CommonContext;
 import com.isstech.vpass.tools.ContextMethod;
 import com.isstech.vpass.tools.RequestXML;
-import com.isstech.vpass.utils.HttpUtils;
-import com.isstech.vpass.utils.HttpsUtil;
+import com.isstech.vpass.utils.Base64Util;
+import com.isstech.vpass.utils.FileUtil;
 import com.isstech.vpass.utils.JsonXmlUtils;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.web.bind.annotation.*;
-
-import javax.imageio.stream.FileImageInputStream;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @ClassName VideoAnalysisController
@@ -71,8 +59,59 @@ public class SmartSearchController extends BaseController {
         return Resp.fail(ErrorCode.SYSTEM_ERROR_416);
     }
 
+    /**
+     * 人脸对比1：1
+     * TODO 暂时支持file
+     * 支持file_id 和 图片对比
+     * @param request
+     * @param type 传递 file 或 file_id 默认file_id
+     * @param file_1 如果时文件，传递文件全路径加文件全名称加后缀,如果ID传递ID
+     * @param file_2 如果时文件，传递文件全路径加文件全名称加后缀,如果ID传递ID
+     */
+    @RequestMapping(value = "facematch", method = RequestMethod.POST)
+    @CrossOrigin(origins = "*")
+    public Resp facematch(
+            HttpServletRequest request,
+            @RequestParam(name = "type", defaultValue = "file_id") String type,
+            @RequestParam(name = "file_1") String file_1,
+            @RequestParam(name = "file_2") String file_2) throws Exception {
+        String url = PATH + CommonContext.FACEMATCH_1V1;
+        if("file_id".equals(type)) {
+            String requestXML = RequestXML.getXMLRequest("facematch.xml");
+            requestXML = requestXML.replace("{file_id_1}", file_1);
+            requestXML = requestXML.replace("{file_id_2}", file_2);
+            requestXML = requestXML.replace("{file_1}", "");
+            requestXML = requestXML.replace("{file_2}", "");
+            String result = ContextMethod.sendPost(url, requestXML);
+            result = JsonXmlUtils.xmlToJson(result);
+            return Resp.success(result);
+        } else if("file".equals(type)){
+            String requestXML = RequestXML.getXMLRequest("facematch.xml");
+            byte[] bytes1 = FileUtil.readFileByBytes(file_1);
+            byte[] bytes2 = FileUtil.readFileByBytes(file_2);
+            String image1 = Base64Util.encode(bytes1);
+            String image2 = Base64Util.encode(bytes2);
+            requestXML = requestXML.replace("{file_1}", image1);
+            requestXML = requestXML.replace("{file_2}", image2);
+            requestXML = requestXML.replace("{file_id_1}", "");
+            requestXML = requestXML.replace("{file_id_2}", "");
+            String result = ContextMethod.sendPost(url, requestXML);
+            result = JsonXmlUtils.xmlToJson(result);
+            return Resp.success(result);
+        }
+        return Resp.fail(ErrorCode.SYSTEM_ERROR_999999);
+     }
+
+    /**
+     * 人脸下载
+     * @param response
+     * @param file_id
+     * @param type
+     * @throws Exception
+     */
     @RequestMapping(value = "down_load_image", method = RequestMethod.GET)
     @CrossOrigin(origins = "*")
+    @SuppressWarnings("all")
     public void downLoad(HttpServletResponse response,
                          @RequestParam(name = "file_id", defaultValue = "6d4407fc5cd94dccb8eec0943d819275%237159918467892474112@10") String file_id,
                          @RequestParam(name = "type", defaultValue = "1") String type) throws Exception {
@@ -86,47 +125,5 @@ public class SmartSearchController extends BaseController {
         sos.write(result,0, result.length - 1);
         sos.flush();
         sos.close();
-    }
-
-    /**
-     * 文件下载
-     * @param response
-     * @param file_id 文件Id
-     * @throws UnsupportedEncodingException
-     */
-    @ResponseBody
-    @RequestMapping(value = "/exportUI")
-    public void exportUI(HttpServletResponse response, HttpServletRequest request, String file_id) throws Exception {
-                String path = PATH + CommonContext.VIDEOANALYSIS_PEOPLEFACE_IMAGE + "?fileid=" + file_id + "&type=" + 1;
-                String fileName = "a.jpg";
-                response.reset();
-                response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName, "UTF-8"));
-                response.setHeader("Connection", "close");
-                response.setHeader("Content-Type", "application/octet-stream");
-                response.setHeader("Access-Control-Allow-Origin", "*");
-                response.setContentType("application/OCTET-STREAM");
-                URL url = new URL(path);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                // 设置超时间为3秒
-                conn.setConnectTimeout(15 * 1000);
-                // 防止屏蔽程序抓取而返回403错误
-                conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-                // 得到输入流
-//                InputStream inputStream = conn.getInputStream();
-                ServletOutputStream out = response.getOutputStream();
-                request.setCharacterEncoding("UTF-8");
-                int BUFFER = 1024*10;
-                byte data[] = new byte[BUFFER];
-                BufferedInputStream bis = null;
-                //获取文件输入流
-                InputStream fis = conn.getInputStream();
-                int read;
-                bis = new BufferedInputStream(fis,BUFFER);
-                while((read = bis.read(data)) != -1){
-                    out.write(data, 0, read);
-                }
-                fis.close();
-                bis.close();
-
     }
 }

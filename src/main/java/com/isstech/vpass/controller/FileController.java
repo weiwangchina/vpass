@@ -1,8 +1,11 @@
 package com.isstech.vpass.controller;
 
+import com.isstech.vpass.service.FileQueueService;
 import com.isstech.vpass.tools.CommonContext;
 import com.isstech.vpass.tools.ContextMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +22,15 @@ import java.io.OutputStream;
 @Controller
 @RequestMapping("{api}/{open}/{version}/file")
 public class FileController extends BaseController {
+
+    @Autowired
+    FileQueueService service;
+
+    @RequestMapping("/test")
+    public String index(Model model){
+        model.addAttribute("journal", service.equals("fsfsd"));
+        return "";
+    }
 
     /**
      * 下载人体人脸图片

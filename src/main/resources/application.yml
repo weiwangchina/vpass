@@ -9,7 +9,21 @@ version: V1.0.0 # 版本标识，需要拼接
 uname: user_1
 pwd: Huawei@1234
 
+account:
+  task-username: user_ww_task
+  task-pwd: Huawei@1234
+
+queuefile: queue_files
+
 server:
   port: 8083
   servlet:
     context-path: /vpass
+spring:
+  rabbitmq:
+    host: 192.168.1.104
+    port: 5672
+    username: t_user_001 # guest
+    password: 123456 # guest
+    virtual-host: /
+    publisher-confirms: true

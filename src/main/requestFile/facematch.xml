@@ -1,0 +1,10 @@
+<request>
+    <image1>
+        <fileId>{file_id_1}</fileId>
+        <base64>{file_1}</base64>
+    </image1>
+    <image2>
+        <fileId>{file_id_2}</fileId>
+        <base64>{file_2}</base64>
+    </image2>
+</request>

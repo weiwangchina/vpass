@@ -24,6 +24,8 @@ public enum ErrorCode {
     SYSTEM_ERROR_416(416, "参数不正确"),
 
     SYSTEM_ERROR_503(503, "服务端当前无法处理请求"),
+
+    SYSTEM_ERROR_999999(999999, "未知异常"),
     ;
 
     private final Integer value;

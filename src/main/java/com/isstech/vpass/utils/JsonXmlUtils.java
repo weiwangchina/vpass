@@ -2,7 +2,6 @@ package com.isstech.vpass.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Paths;
