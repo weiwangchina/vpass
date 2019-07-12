@@ -1,0 +1,29 @@
+<request>
+    <age>-1</age>
+    <algorithmCode>0104000100</algorithmCode>
+    <areatags/>
+    <backpack>-1</backpack>
+    <cameraSns/>
+    <confidenceThreshold>55</confidenceThreshold>
+    <domainCodes/>
+    <startTime>{startTime}</startTime>
+    <endTime>{endTime}</endTime>
+    <fileIds/>
+    <gender>-1</gender>
+    <handbag>-1</handbag>
+    <historyFileIds/>
+    <lowerColor>0</lowerColor>
+    <lowerStyle>-1</lowerStyle>
+    <otype>-1</otype>
+    <page>
+        <no>{no}</no>
+        <orderName>time</orderName>
+        <size>{size}</size>
+        <sort>desc</sort>
+    </page>
+    <periods/>
+    <searchType>0</searchType>
+    <upperColor>-1</upperColor>
+    <upperStyle>-1</upperStyle>
+    <upperTexture>-1</upperTexture>
+</request>

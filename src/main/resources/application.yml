@@ -1,0 +1,15 @@
+# 调用api时的地址拼接参数-版本
+api: api # 所有api均需要api拼接
+open: open # 如果时外部调用，则需要拼接open
+public: public # 如果时公共的，都可以访问的，需要拼接
+private: private # 如果时本项目私有的，则需要拼接
+version: V1.0.0 # 版本标识，需要拼接
+
+# 华为账户登录需要的用户名和密码
+uname: user_1
+pwd: Huawei@1234
+
+server:
+  port: 8083
+  servlet:
+    context-path: /vpass
