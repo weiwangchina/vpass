@@ -1,3 +1,7 @@
+spring:
+  profiles:
+    active: dev # dev # test # pro
+
 # 调用api时的地址拼接参数-版本
 api: api # 所有api均需要api拼接
 open: open # 如果时外部调用，则需要拼接open
@@ -8,18 +12,21 @@ version: V1.0.0 # 版本标识，需要拼接
 # 华为账户登录需要的用户名和密码
 uname: user_1
 pwd: Huawei@1234
-
 account:
   task-username: user_ww_task
   task-pwd: Huawei@1234
 
 queuefile: queue_files
 
+---
 server:
   port: 8083
-  servlet:
-    context-path: /vpass
+#  servlet:
+#    context-path: /vpass
 spring:
+  profiles: dev
+  application:
+    name: vpass-service
   rabbitmq:
     host: 192.168.1.104
     port: 5672
@@ -27,3 +34,61 @@ spring:
     password: guest
     virtual-host: /
     publisher-confirms: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: true
+
+---
+server:
+  port: 8083
+#  servlet:
+#    context-path: /vpass
+spring:
+  profiles: test
+  application:
+    name: vpass-service
+  rabbitmq:
+    host: 192.168.1.104
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    publisher-confirms: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: true
+
+---
+server:
+  port: 8083
+#  servlet:
+#    context-path: /vpass
+spring:
+  profiles: pro
+  application:
+    name: vpass-service
+  rabbitmq:
+    host: 192.168.1.104
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    publisher-confirms: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: true
