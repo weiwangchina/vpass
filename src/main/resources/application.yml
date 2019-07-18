@@ -23,7 +23,7 @@ spring:
   rabbitmq:
     host: 192.168.1.104
     port: 5672
-    username: t_user_001 # guest
-    password: 123456 # guest
+    username: guest
+    password: guest
     virtual-host: /
     publisher-confirms: true

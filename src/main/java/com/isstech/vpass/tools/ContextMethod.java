@@ -104,8 +104,6 @@ public class ContextMethod {
     }
 
     public static String login_post(String url, String json) throws IOException {
-        System.out.println(url);
-        System.out.println(json);
         RequestBody body = RequestBody.create(XML, json);
         Request request = new Request.Builder().url(url).post(body).build();
         Response response = client.newCall(request).execute();
@@ -114,8 +112,6 @@ public class ContextMethod {
     }
 
     public static String sendPost(String url, String json) throws IOException {
-        System.out.println(url);
-        System.out.println(json);
         RequestBody body = RequestBody.create(XML, json);
         Request request = new Request.Builder().url(url).post(body).build();
         Response response = client.newCall(request).execute();
@@ -125,18 +121,14 @@ public class ContextMethod {
 
     public static byte[] postStream(String url, String json)
             throws IOException {
-        System.out.println(url);
-        System.out.println(json);
         RequestBody body = RequestBody.create(TEXT, json);
         Request request = new Request.Builder().url(url).post(body).build();
         Response response = client.newCall(request).execute();
 
         String contentType = response.headers().get("Content-Type");
         if (contentType != null && contentType.indexOf("text") == 0) {
-            String result = response.body().string();
-            System.out.println(result);
+            response.body().string();
         }
-
         byte[] rawdata = response.body().bytes();
         return rawdata;
     }
@@ -166,11 +158,9 @@ public class ContextMethod {
      */
     public static String get(String url)
             throws IOException {
-        System.out.println(url);
         Request request = new Request.Builder().url(url).get().build();
         Response response = client.newCall(request).execute();
         String result = response.body().string();
-        System.out.println(result);
         return result;
     }
 
