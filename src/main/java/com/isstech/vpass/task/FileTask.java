@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.isstech.vpass.controller.BaseController;
+import com.isstech.vpass.exception.GlobalException;
 import com.isstech.vpass.service.FileQueueService;
 import com.isstech.vpass.tools.CommonContext;
 import com.isstech.vpass.tools.ContextMethod;
@@ -41,20 +42,17 @@ public class FileTask {
 
 //    @Scheduled(cron = "0/55 * * * * *") // 55秒执行一次
 //    @Scheduled(cron = "* 0/5 * * * *") // 5分钟执行一次
-    @Scheduled(cron = "0/30 * * * * *")
-    public void scheduled() throws Exception {
-        login();
-
-        Long start_time = DateUtil.getTimeByParam(Calendar.MINUTE, -30); // 只能一小时内的分钟数， 这里设置30分钟
-//        Long start_time = DateUtil.getTimeByParam(Calendar.MONTH, -1); // 12个月内
+//    @Scheduled(cron = "0/5 * * * * *")
+    public void scheduled() throws GlobalException {
         try {
+            login();
+            Long start_time = DateUtil.getTimeByParam(Calendar.MINUTE, -30); // 只能一小时内的分钟数， 这里设置30分钟
+//        Long start_time = DateUtil.getTimeByParam(Calendar.MONTH, -1); // 12个月内
             getData(1, start_time, 0);
-        } catch (Exception e) {
             logout();
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new GlobalException("运行自定义任务异常！ 异常内容是：" + e.getMessage(), 500);
         }
-
-        logout();
     }
 
     private void logout() throws Exception {

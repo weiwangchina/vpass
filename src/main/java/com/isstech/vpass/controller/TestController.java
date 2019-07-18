@@ -1,5 +1,6 @@
 package com.isstech.vpass.controller;
 
+import com.isstech.vpass.exception.GlobalException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,12 @@ public class TestController extends BaseController {
     public String test() {
         logger.info("request: {}", "test".toString());
         return "test";
+    }
+
+    @RequestMapping("exception")
+    @CrossOrigin(origins = "*")
+    public String exception() throws Exception {
+        throw new Exception("测试异常...");
     }
 
     public static void main(String[] args) {
